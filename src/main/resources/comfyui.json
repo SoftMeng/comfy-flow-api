@@ -1,7 +1,7 @@
 [
   {
     "name": "图生图",
-    "path": "/example/图生图_workflow_api.json"
+    "path": "comfy/图生图_workflow_api.json"
   },
   {
     "name": "解释：工作流的名称，比如动漫风格转换",

@@ -1,0 +1,8 @@
+body {
+  margin: 0 auto;
+  width: 70%;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}

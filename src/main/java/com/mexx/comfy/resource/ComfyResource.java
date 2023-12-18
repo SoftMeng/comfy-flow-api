@@ -112,22 +112,7 @@ public class ComfyResource {
         // TODO 可以扩展限流的规则
         LOGGER.info("推送工作流任务到服务端:{},{}", pushVo.getOpenid(), pushVo.getFlowName());
         List<FlowVo> flowVos = getFlowVos();
-        FlowVo flow = flowVos.stream()
-            .filter(flowVo -> StrUtil.equals(pushVo.getFlowName(), flowVo.getName()))
-            .findFirst()
-            .orElse(null);
-        if (Objects.isNull(flow)) {
-            throw new BadException("工作流不存在");
-        }
-        String flowPath = flow.getPath();
-        File file = FileUtil.file(flowPath);
-        if (!FileUtil.exist(file)) {
-            throw new BadException("工作流文件不存在");
-        }
-        String json = FileUtil.readUtf8String(file);
-        if (StrUtil.isBlank(json)) {
-            throw new BadException("工作流文件内容为空");
-        }
+        String json = getFlow(pushVo.getFlowName(), flowVos);
         final String comfyIp = getComfyIp();
         final long send = RandomUtil.randomLong(1L, 8_446_744_073_709_551_614L);
         final String image = uploadComfyFile(comfyIp, pushVo.getFile());
@@ -170,6 +155,26 @@ public class ComfyResource {
                 response.close();
             }
         }
+    }
+
+    private String getFlow(String flowName, List<FlowVo> flowVos) {
+        FlowVo flow = flowVos.stream()
+            .filter(flowVo -> StrUtil.equals(flowName, flowVo.getName()))
+            .findFirst()
+            .orElse(null);
+        if (Objects.isNull(flow)) {
+            throw new BadException("工作流不存在");
+        }
+        String flowPath = flow.getPath();
+        File file = FileUtil.file(flowPath);
+        if (FileUtil.exist(file)) {
+            String json = FileUtil.readUtf8String(file);
+            if (StrUtil.isBlank(json)) {
+                throw new BadException("工作流文件内容为空");
+            }
+            return json;
+        }
+        return ResourceUtil.readUtf8Str(flowPath);
     }
 
     @GET
@@ -261,6 +266,7 @@ public class ComfyResource {
             LOGGER.info("ComfyUI-上传图片-返回:{},{}", response.getStatus(), str);
             ClientUtils.check200(response);
             ComfyImageVo comfyImageVo = JSONUtil.toBean(str, ComfyImageVo.class);
+            LOGGER.info("上传文件成功:{}", comfyImageVo.getName());
             return comfyImageVo.getName();
         } catch (Exception e) {
             LOGGER.error("上传图片失败", e);

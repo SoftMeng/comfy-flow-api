@@ -29,7 +29,7 @@ public class ClientUtils {
     public static void check200(Response response) {
         // Comfy返回异常的校验
         if (!Objects.equals(response.getStatus(), 200)) {
-            throw new BadException("HTTP 调用返回错误信息");
+            throw new BadException("HTTP 调用返回错误信息:" + response.getStatus());
         }
     }
 }

@@ -29,6 +29,31 @@ comfy.ips=ComfyUI所在服务器的IP，比如`127.0.0.1`
 ]
 ```
 
+## 本地测试
+
+### 使用到的组件清单
+
+可以访问地址: http://127.0.0.1:8189/q/dev-ui/extensions
+
+![img.png](doc%2Fimg_0.png)
+
+### 接口API清单
+
+可以访问地址: http://127.0.0.1:8189/q/swagger-ui/
+
+![img_1.png](doc%2Fimg_1.png)
+
+### 简单使用
+
+可以访问地址: http://127.0.0.1:8189/drawNow.html
+
+![img_2.png](doc%2Fimg_2.png)
+
+这个工作流使用到的资源如下
+
+1. 模型: https://civitai.com/models/217692/mexxldimsdxllcm2?modelVersionId=245340
+2. 插件1: https://github.com/SoftMeng/ComfyUI_Mexx_Styler
+
 ## 部署（Jar包形式）
 
 对项目进行打包

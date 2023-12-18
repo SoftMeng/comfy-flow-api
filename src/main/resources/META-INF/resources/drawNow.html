@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ComfyUI Prompt</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"
+          integrity="sha512-xiunq9hpKsIcz42zt0o2vCo34xV0j6Ny8hgEylN3XBglZDtTZ2nwnqF/Z/TTCc18sGdvCjbFInNd++6q3J0N6g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script type="text/javascript">
+    window.onload=function() {
+      // add event listener
+      document.getElementById("drawNow").addEventListener('click', e => {
+        // collect files
+        const value = document.getElementById("commentField").value
+        // post form data
+        const xhr = new XMLHttpRequest()
+
+        xhr.onload = () => {
+          const result = document.getElementById("result");
+          for (let link of JSON.parse(xhr.responseText).result) {
+            var img = document.createElement("img");
+            img.src = link.comfyImageUrl;
+            result.insertBefore(img, result.firstElementChild)
+          }
+        }
+        xhr.open('POST', '/comfyui/allin')
+        let formData = new FormData();
+        let file = document.getElementById('file');
+        formData.append('file', file.files[0]);
+        formData.append('openId', '123');
+        formData.append('flowName', '图生图');
+        formData.append('prompt', value);
+        xhr.send(formData);
+      })
+    }
+
+
+
+    </script>
+</head>
+<body>
+<br/>
+<div>
+    <label for="commentField">绘画参数（English）：</label>
+    <textarea placeholder="1girl" id="commentField"></textarea>
+    <br/>
+    <input id="file" type="file" multiple="multiple" name="file">
+    <br/>
+    <input class="button-primary" id="drawNow" type="submit" value="AI Draw">
+</div>
+<br/>
+<div id="result">
+    <br/>
+</div>
+</body>
+</html>
