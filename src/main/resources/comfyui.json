@@ -1,0 +1,10 @@
+[
+  {
+    "name": "图生图",
+    "path": "/Users/xiangyuanmeng/Documents/MyProjectSpace/comfy-flow-api/src/main/resources/example/图生图_workflow_api.json"
+  },
+  {
+    "name": "解释：工作流的名称，比如动漫风格转换",
+    "path": "解释：在服务器上，动漫风格转换的workflow-api.json所在的位置，比如/comfyui/workflow-api.json"
+  }
+]
