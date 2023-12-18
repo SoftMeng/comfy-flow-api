@@ -1,10 +1,14 @@
 package com.mexx.comfy.resource;
 
+import cn.hutool.core.io.FileUtil;
+import com.mexx.comfy.properties.FileProperties;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -16,17 +20,18 @@ import org.jboss.resteasy.annotations.jaxrs.PathParam;
  *
  * @author <a href="mail to: mengxiangyuancc@gmail.com" rel="nofollow">孟祥元</a>
  */
-@Path("/")
+@Path("/static")
 public class StaticResource {
+    @Inject FileProperties fileProperties;
+
     @GET
     @Path("{file}")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getFile(@PathParam("file") String file) {
         try {
-            java.nio.file.Path path = Paths.get("static/" + file);
-            byte[] fileData = Files.readAllBytes(path);
-            return Response.ok(fileData).build();
-        } catch (IOException e) {
+            File targetFile = FileUtil.file(fileProperties.disk() + file);
+            return Response.ok(targetFile).build();
+        } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }

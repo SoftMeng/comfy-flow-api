@@ -20,7 +20,7 @@
           const result = document.getElementById("result");
           for (let link of JSON.parse(xhr.responseText).result) {
             var img = document.createElement("img");
-            img.src = link.comfyImageUrl;
+            img.src = link.viewUrl;
             result.insertBefore(img, result.firstElementChild)
           }
         }

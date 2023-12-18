@@ -9,7 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.Lists;
-import com.mexx.comfy.config.ComfyProperties;
+import com.mexx.comfy.properties.ComfyProperties;
 import com.mexx.comfy.entity.ComfyPromptTask;
 import com.mexx.comfy.exception.BadException;
 import com.mexx.comfy.model.ComfyImageVo;
@@ -17,6 +17,7 @@ import com.mexx.comfy.model.ComfyPromptResp;
 import com.mexx.comfy.model.FlowVo;
 import com.mexx.comfy.model.PushVo;
 import com.mexx.comfy.model.Result;
+import com.mexx.comfy.service.FileStorage;
 import com.mexx.comfy.utils.ClientUtils;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.vertx.core.json.JsonObject;
@@ -30,11 +31,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
@@ -42,11 +41,8 @@ import jakarta.ws.rs.core.Response;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.internal.ClientConfiguration;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartEntityPartWriter;
 import org.slf4j.Logger;
@@ -69,6 +65,7 @@ public class ComfyResource {
         .softValues()
         .build();
     @Inject ComfyProperties comfyProperties;
+    @Inject FileStorage fileStorage;
 
     @GET
     @Path("/flow/list")
@@ -90,11 +87,19 @@ public class ComfyResource {
         Result<ComfyPromptResp> comfyPromptRespResult = push(pushVo);
         ComfyPromptResp comfyPromptResp = comfyPromptRespResult.getResult();
         String promptId = comfyPromptResp.getPrompt_id();
-        for (int i = 0; i <= 60; i++) {
+        PanacheQuery<ComfyPromptTask> panacheQuery = ComfyPromptTask.find("promptId=?1", promptId);
+        ComfyPromptTask comfyPromptTask = panacheQuery.firstResult();
+        final String comfyIp = comfyPromptTask.comfyIp;
+        List<ComfyImageVo> comfyImageVos = JSONUtil.toList(comfyPromptTask.result, ComfyImageVo.class);
+        for (int i = 0; i <= 40; i++) {
             ThreadUtil.sleep(1500);
-            Result<List<ComfyImageVo>> result = get(promptId);
-            if (CollUtil.isNotEmpty(result.getResult())) {
-                return result;
+            if (CollUtil.isEmpty(comfyImageVos)) {
+                comfyImageVos = getComfyViews(comfyIp, promptId);
+                if (CollUtil.isNotEmpty(comfyImageVos)) {
+                    comfyPromptTask.result = JSONUtil.toJsonStr(comfyImageVos);
+                    comfyPromptTask.persistAndFlush();
+                    return Result.ok(comfyImageVos);
+                }
             }
         }
         throw new BadException("超时啦");
@@ -223,13 +228,14 @@ public class ComfyResource {
                                     final String subfolder = imageJson.getString("subfolder");
                                     final String filename = imageJson.getString("filename");
                                     final String type = imageJson.getString("type");
+                                    final String imageUrl = getImageUrl(comfyIp, subfolder, filename, type);
+                                    final String viewUrl = fileStorage.upload(imageUrl, filename);
                                     ComfyImageVo comfyImageVo = new ComfyImageVo();
                                     comfyImageVo.setSubfolder(subfolder);
                                     comfyImageVo.setName(filename);
                                     comfyImageVo.setType(type);
-                                    comfyImageVo.setComfyImageUrl(
-                                        getImageUrl(comfyIp, subfolder, filename, type)
-                                    );
+                                    comfyImageVo.setComfyImageUrl(imageUrl);
+                                    comfyImageVo.setViewUrl(viewUrl);
                                     comfyImageVos.add(comfyImageVo);
                                 }
                             });

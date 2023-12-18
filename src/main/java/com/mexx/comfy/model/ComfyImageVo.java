@@ -16,4 +16,5 @@ public class ComfyImageVo {
     private String subfolder;
     private String type;
     private String comfyImageUrl;
+    private String viewUrl;
 }

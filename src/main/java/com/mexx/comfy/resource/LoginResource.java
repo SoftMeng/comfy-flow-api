@@ -2,7 +2,7 @@ package com.mexx.comfy.resource;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.mexx.comfy.config.WechatProperties;
+import com.mexx.comfy.properties.WechatProperties;
 import com.mexx.comfy.entity.LoginLog;
 import com.mexx.comfy.exception.BadException;
 import com.mexx.comfy.model.Jscode2sessionResp;
