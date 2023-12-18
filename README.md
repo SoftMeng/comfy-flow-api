@@ -13,19 +13,20 @@
 
 #### 微信小程序配置
 
+```
 wechat.appid=小程序 appId
 wechat.secret=小程序 appSecret
-
+```
 #### ComfyUI服务的Ip
-
+```
 comfy.ips=ComfyUI所在服务器的IP，比如`127.0.0.1`
-
+```
 #### 生成的图片的存储地址
-
+```
 file.storage.type=disk
 file.storage.disk=/Users/xiangyuanmeng/Documents/MyProjectSpace/comfy-flow-api/static/
 file.storage.view=http://127.0.0.1:8189/static/
-
+```
 其中
 
 1. 类型目前只支持本地磁盘，即`file.storage.type=disk`;
