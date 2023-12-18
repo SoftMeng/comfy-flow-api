@@ -1,3 +1,16 @@
+<div align="center">
+    <img src="./doc/icon.jpg" width="256px"/>
+</div>
+<div align="center">
+    富强、民主、文明、和谐
+</div>
+<div align="center">
+    自由、平等、公正、法治
+</div>
+<div align="center">
+    爱国、敬业、诚信、友善
+</div>
+
 # comfy-flow-api
 
 这是一个ComfyUI的API聚合项目
