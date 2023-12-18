@@ -2,13 +2,13 @@
     <img src="./doc/icon.jpg" width="256px"/>
 </div>
 <div align="center">
-    富强、民主、文明、和谐
+    富强、民主、文明、和谐、合规
 </div>
 <div align="center">
-    自由、平等、公正、法治
+    自由、平等、公正、法治、合法
 </div>
 <div align="center">
-    爱国、敬业、诚信、友善
+    爱国、敬业、诚信、友善、合理
 </div>
 
 # comfy-flow-api
