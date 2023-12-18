@@ -186,21 +186,33 @@ public class ComfyResource {
     public Result<List<ComfyImageVo>> get(@QueryParam("prompt_id") String prompt_id) {
         PanacheQuery<ComfyPromptTask> panacheQuery = ComfyPromptTask.find("promptId=?1", prompt_id);
         ComfyPromptTask comfyPromptTask = panacheQuery.firstResult();
+        final String comfyIp = comfyPromptTask.comfyIp;
+        List<ComfyImageVo> comfyImageVos = JSONUtil.toList(comfyPromptTask.result, ComfyImageVo.class);
+        if (CollUtil.isEmpty(comfyImageVos)) {
+            comfyImageVos = getComfyViews(comfyIp, prompt_id);
+            if (CollUtil.isNotEmpty(comfyImageVos)) {
+                comfyPromptTask.result = JSONUtil.toJsonStr(comfyImageVos);
+                comfyPromptTask.persistAndFlush();
+            }
+        }
+        return Result.ok(comfyImageVos);
+    }
+
+    private List<ComfyImageVo> getComfyViews(String comfyIp, String prompt_id) {
+        List<ComfyImageVo> comfyImageVos = Lists.newArrayList();
         Response response = null;
         try (Client client = ClientUtils.buildClient()) {
-            String comfyIp = comfyPromptTask.comfyIp;
             Invocation.Builder builder = client.target("http://" + comfyIp + ":8188/history/" + prompt_id)
                 .request(MediaType.APPLICATION_JSON);
             response = builder.get();
             JsonObject resp = response.readEntity(JsonObject.class);
             LOGGER.info("ComfyUI-查询进度-返回:{},{}", response.getStatus(), resp.toString());
             ClientUtils.check200(response);
-            if (Objects.isNull(resp) || resp.isEmpty()) {
-                return Result.ok(Lists.newArrayList());
+            if (resp.isEmpty()) {
+                return Lists.newArrayList();
             }
             JsonObject body = resp.getJsonObject(prompt_id);
             JsonObject outputs = body.getJsonObject("outputs");
-            List<ComfyImageVo> comfyImageVos = Lists.newArrayList();
             outputs.stream().forEach(entry -> {
                 Object value = entry.getValue();
                 if (value instanceof JsonObject imageBody) {
@@ -224,9 +236,7 @@ public class ComfyResource {
                     }
                 }
             });
-            comfyPromptTask.result = JSONUtil.toJsonStr(comfyImageVos);
-            comfyPromptTask.persistAndFlush();
-            return Result.ok(comfyImageVos);
+            return comfyImageVos;
         } catch (Exception e) {
             LOGGER.error("查询进度失败", e);
             throw new BadException("查询进度失败:" + e.getMessage());
