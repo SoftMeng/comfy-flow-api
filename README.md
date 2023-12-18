@@ -1,12 +1,11 @@
 # comfy-flow-api
 
-This project is a set of ComfyUI API.
+这是一个ComfyUI的API聚合项目
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+1. 提供了工作流的API调用；
+2. 提供了微信小程序的授权API；
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-## Configuration
+## 配置
 
 ### 在 application.properties 文件中
 
@@ -30,49 +29,30 @@ comfy.ips=ComfyUI所在服务器的IP，比如`127.0.0.1`
 ]
 ```
 
-## Running the application in dev mode
+## 部署（Jar包形式）
 
-You can run your application in dev mode that enables live coding using:
+对项目进行打包
 
-```shell script
-./mvnw compile quarkus:dev
-```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
 ```shell script
 ./mvnw package -Dquarkus.package.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+打完包的程序在`target`中，安装JDK17或者21后，可以使用命令行启动
 
-## Creating a native executable
-
-You can create a native executable using: 
-
-```shell script
-./mvnw package -Dnative
+```shell
+java -jar target/comfy-flow-api-runner.jar
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
+## 部署（Native形式）
+
+这需要你安装GraalVM
 
 ```shell script
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/comfy-flow-api-1.0.0-SNAPSHOT-runner`
+打包后可以使用下面命令启动
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+```shell
+./target/comfy-flow-api-1.0.0-SNAPSHOT-runner
+```
