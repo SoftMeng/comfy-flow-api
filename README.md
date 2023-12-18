@@ -47,12 +47,14 @@ comfy.ips=ComfyUI所在服务器的IP，比如`127.0.0.1`
 
 可以访问地址: http://127.0.0.1:8189/drawNow.html
 
-![img_2.png](doc%2Fimg_2.png)
+![img_4.png](doc%2Fimg_4.png)
 
 这个工作流使用到的资源如下
 
 1. 模型: https://civitai.com/models/217692/mexxldimsdxllcm2?modelVersionId=245340
 2. 插件1: https://github.com/SoftMeng/ComfyUI_Mexx_Styler
+
+只是个流程测试，没有进度条。
 
 ## 部署（Jar包形式）
 

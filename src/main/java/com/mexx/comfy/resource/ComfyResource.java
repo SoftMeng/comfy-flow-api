@@ -91,7 +91,7 @@ public class ComfyResource {
         ComfyPromptResp comfyPromptResp = comfyPromptRespResult.getResult();
         String promptId = comfyPromptResp.getPrompt_id();
         for (int i = 0; i <= 60; i++) {
-            ThreadUtil.sleep(1000);
+            ThreadUtil.sleep(1500);
             Result<List<ComfyImageVo>> result = get(promptId);
             if (CollUtil.isNotEmpty(result.getResult())) {
                 return result;
