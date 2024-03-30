@@ -12,4 +12,5 @@ import java.util.List;
 @ConfigMapping(prefix = "comfy")
 public interface ComfyProperties {
     List<String> ips();
+    Boolean job();
 }

@@ -1,7 +1,6 @@
 package com.mexx.comfy.service;
 
 import com.mexx.comfy.model.Jscode2sessionResp;
-import io.vertx.core.json.JsonObject;
 
 /**
  * Description: TokenService.java .<br>

@@ -1,10 +1,18 @@
 [
-  {
-    "name": "二次元转真人",
-    "path": "comfy/二次元转真人_workflow_api.json"
-  },
-  {
-    "name": "解释：工作流的名称，比如动漫风格转换",
-    "path": "解释：在服务器上，动漫风格转换的workflow-api.json所在的位置，比如/comfyui/workflow-api.json"
-  }
+    {
+        "name": "DimLighting",
+        "path": "comfy/DimLighting.json"
+    },
+    {
+        "name": "写实Lightning",
+        "path": "comfy/写实Lightning.json"
+    },
+    {
+        "name": "动漫Lightning",
+        "path": "comfy/动漫Lightning.json"
+    },
+    {
+        "name": "普通照片",
+        "path": "comfy/普通照片.json"
+    }
 ]

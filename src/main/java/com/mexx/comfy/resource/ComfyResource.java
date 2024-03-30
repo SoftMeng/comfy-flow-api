@@ -9,7 +9,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.Lists;
-import com.mexx.comfy.properties.ComfyProperties;
 import com.mexx.comfy.entity.ComfyPromptTask;
 import com.mexx.comfy.exception.BadException;
 import com.mexx.comfy.model.ComfyImageVo;
@@ -17,6 +16,7 @@ import com.mexx.comfy.model.ComfyPromptResp;
 import com.mexx.comfy.model.FlowVo;
 import com.mexx.comfy.model.PushVo;
 import com.mexx.comfy.model.Result;
+import com.mexx.comfy.properties.ComfyProperties;
 import com.mexx.comfy.service.FileStorage;
 import com.mexx.comfy.utils.ClientUtils;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
@@ -83,7 +83,7 @@ public class ComfyResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Transactional
-    public Result<List<ComfyImageVo>> get(@MultipartForm PushVo pushVo) {
+    public Result<List<ComfyImageVo>> allin(@MultipartForm PushVo pushVo) {
         Result<ComfyPromptResp> comfyPromptRespResult = push(pushVo);
         ComfyPromptResp comfyPromptResp = comfyPromptRespResult.getResult();
         String promptId = comfyPromptResp.getPrompt_id();
@@ -91,7 +91,7 @@ public class ComfyResource {
         ComfyPromptTask comfyPromptTask = panacheQuery.firstResult();
         final String comfyIp = comfyPromptTask.comfyIp;
         List<ComfyImageVo> comfyImageVos = JSONUtil.toList(comfyPromptTask.result, ComfyImageVo.class);
-        for (int i = 0; i <= 40; i++) {
+        for (int i = 0; i <= 80; i++) {
             ThreadUtil.sleep(1500);
             if (CollUtil.isEmpty(comfyImageVos)) {
                 comfyImageVos = getComfyViews(comfyIp, promptId);
@@ -123,7 +123,9 @@ public class ComfyResource {
         final String image = uploadComfyFile(comfyIp, pushVo.getFile());
         json = StrUtil.replace(json, "___seed___", String.valueOf(send));
         json = StrUtil.replace(json, "___prompt___", pushVo.getPrompt());
-        json = StrUtil.replace(json, "___image___", image);
+        if (Objects.nonNull(image)) {
+            json = StrUtil.replace(json, "___image___", image);
+        }
         String postJson = StrUtil.format(
             """
                 {
@@ -132,7 +134,7 @@ public class ComfyResource {
                 }
                 """, pushVo.getOpenid(), json
         );
-        LOGGER.info("ComfyUI-提交任务-请求:{}", postJson);
+        LOGGER.debug("ComfyUI-提交任务-请求:{}", postJson);
         Response response = null;
         try (Client client = ClientUtils.buildClient()) {
             Invocation.Builder builder = client.target("http://" + comfyIp + ":8188/prompt")
@@ -261,10 +263,11 @@ public class ComfyResource {
      * @return .
      */
     private String uploadComfyFile(String comfyIp, InputPart file) {
-        if (Objects.isNull(file)) {
+        if (Objects.isNull(file) || StrUtil.isBlank(file.getFileName())) {
             LOGGER.info("无图片上传");
             return null;
         }
+        LOGGER.info("图片: {}", file.getFileName());
         Response response = null;
         try (Client client = ClientUtils.buildClient()) {
             client.register(MultipartEntityPartWriter.class);
@@ -294,7 +297,7 @@ public class ComfyResource {
         }
     }
 
-    private List<FlowVo> getFlowVos() {
+    public List<FlowVo> getFlowVos() {
         // TODO 暂时用文件存储，如果有管理平台，可以基于管理平台进行更多的管理
         List<FlowVo> result = CACHE.get("_FLOW", k -> {
             String flows = ResourceUtil.readUtf8Str("comfyui.json");

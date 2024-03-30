@@ -1,0 +1,131 @@
+{
+  "3": {
+    "inputs": {
+      "seed": ___seed___,
+      "steps": 4,
+      "cfg": 1,
+      "sampler_name": "dpmpp_sde",
+      "scheduler": "karras",
+      "denoise": 1,
+      "model": [
+        "4",
+        0
+      ],
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "latent_image": [
+        "5",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "K采样器"
+    }
+  },
+  "4": {
+    "inputs": {
+      "ckpt_name": "SDXL_PHOTO.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Checkpoint加载器(简易)"
+    }
+  },
+  "5": {
+    "inputs": {
+      "width": 720,
+      "height": 1280,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "空Latent"
+    }
+  },
+  "6": {
+    "inputs": {
+      "text": [
+        "31",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "7": {
+    "inputs": {
+      "text": "nsfw,disfigured,ugly,deformed,text,logo,word,watermark,bad crop,out of frame,fat,obese,thick thighs,border,crop,",
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP文本编码器"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "22": {
+    "inputs": {
+      "output_path": "[time(%Y-%m-%d)]",
+      "filename_prefix": "ComfyUI",
+      "filename_delimiter": "_",
+      "filename_number_padding": 4,
+      "filename_number_start": "false",
+      "extension": "jpg",
+      "quality": 96,
+      "lossless_webp": "false",
+      "overwrite_mode": "false",
+      "show_history": "false",
+      "show_history_by_prefix": "true",
+      "embed_workflow": "true",
+      "show_previews": "true",
+      "images": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "Image Save",
+    "_meta": {
+      "title": "图像保存"
+    }
+  },
+  "31": {
+    "inputs": {
+      "text": "___prompt___"
+    },
+    "class_type": "Text Multiline",
+    "_meta": {
+      "title": "多行文本"
+    }
+  }
+}

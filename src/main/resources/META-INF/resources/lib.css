@@ -1,0 +1,18 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0px;
+}
+
+.image-gallery {
+    column-count: 6; /* 根据需要调整列数 */
+    -moz-column-count: 6; /* Firefox */
+    -webkit-column-count: 6; /* Safari and Chrome */
+    column-gap: 0.1em; /* 列之间的间距 */
+}
+
+.image-gallery img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.1em; /* 图片之间的间距 */
+}

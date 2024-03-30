@@ -1,11 +1,8 @@
 package com.mexx.comfy.model;
 
 import jakarta.ws.rs.core.MediaType;
-import java.io.InputStream;
-import lombok.SneakyThrows;
 import org.jboss.resteasy.annotations.jaxrs.FormParam;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 
 /**
  * Description: 文件 .<br>
