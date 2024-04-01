@@ -138,7 +138,7 @@ java -jar target/comfy-flow-api-runner.jar
 
 ### 4. 在drawNow.html中修改为“我的工作流AAA”
 
-![step4.png](doc%2Fstep4.png)![img.png](img.png)
+![step4.png](doc%2Fstep4.png)
 
 ### 5. 修改工作流API的参数
 
