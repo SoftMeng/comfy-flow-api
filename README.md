@@ -124,34 +124,34 @@ java -jar target/comfy-flow-api-runner.jar
 
 ## 使用步骤
 
-### 导出ComfyUI的API格式工作流
+### 1. 导出ComfyUI的API格式工作流
 
 [ComfyUI导出API格式工作流.mp4](doc%2Fvedio%2FComfyUI%E5%AF%BC%E5%87%BAAPI%E6%A0%BC%E5%BC%8F%E5%B7%A5%E4%BD%9C%E6%B5%81.mp4)
 
-### 放入到工程文件夹中
+### 2. 放入到工程文件夹中
 
 ![step2.png](doc%2Fstep2.png)
 
-### 将工作流文件和名称的对应关系写入到comfyui.json文件中
+### 3. 将工作流文件和名称的对应关系写入到comfyui.json文件中
 
 ![step3.png](doc%2Fstep3.png)
 
-### 在drawNow.html中修改为“我的工作流AAA”
+### 4. 在drawNow.html中修改为“我的工作流AAA”
 
 ![step4.png](doc%2Fstep4.png)![img.png](img.png)
 
-### 修改工作流API的参数
+### 5. 修改工作流API的参数
 
 ![step5.png](doc%2Fstep5.png)
 ![step6.png](doc%2Fstep6.png)
 
-### 启动工程
+### 6. 启动工程
 
 访问: http://localhost:8189/drawNow.html
 
 ![drawNow.png](doc%2FdrawNow.png)
 
-### 开启JOB
+### 7. 开启JOB
 
 配置文件开启JOB, 在配置文件里开启
 
@@ -161,7 +161,7 @@ java -jar target/comfy-flow-api-runner.jar
 
 ![jobresult.png](doc%2Fjobresult.png)
 
-### 访问生成的图片
+### 8. 访问生成的图片
 
 访问: http://localhost:8189/lib.html
 
