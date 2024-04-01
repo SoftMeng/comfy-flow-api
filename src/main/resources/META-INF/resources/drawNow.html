@@ -29,7 +29,7 @@
         let file = document.getElementById('file');
         formData.append('file', file.files[0]);
         formData.append('openId', '123');
-        formData.append('flowName', '动漫Lightning');
+        formData.append('flowName', '我的工作流AAA');
         formData.append('prompt', value);
         xhr.send(formData);
       })
@@ -42,7 +42,7 @@
 <body>
 <br/>
 <div>
-    <h4 for="flowName">动漫Lightning</h4>
+    <h4 for="flowName">工作流程：</h4>
     <br/>
     <label for="commentField">绘画参数（English）：</label>
     <textarea placeholder="1girl" id="commentField"></textarea>

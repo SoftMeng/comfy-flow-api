@@ -1,18 +1,6 @@
 [
     {
-        "name": "DimLighting",
-        "path": "comfy/DimLighting.json"
-    },
-    {
-        "name": "写实Lightning",
-        "path": "comfy/写实Lightning.json"
-    },
-    {
-        "name": "动漫Lightning",
-        "path": "comfy/动漫Lightning.json"
-    },
-    {
-        "name": "普通照片",
-        "path": "comfy/普通照片.json"
+        "name": "我的工作流AAA",
+        "path": "comfy/我的工作流AAA.json"
     }
 ]
