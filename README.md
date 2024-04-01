@@ -161,9 +161,9 @@ java -jar target/comfy-flow-api-runner.jar
 
 ![jobresult.png](doc%2Fjobresult.png)
 
-### 8. 访问生成的图片
+### 8. 访问本地生成的图片
 
-访问: http://localhost:8189/lib.html
+访问: http://localhost:8189/lib.html 点击搜索
 
 ![lib.png](doc%2Flib.png)
 
