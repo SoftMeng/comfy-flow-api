@@ -1,14 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>图片搜索与瀑布流展示</title>
-  <link rel="stylesheet" href="lib.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片搜索与瀑布流展示</title>
+    <link rel="stylesheet" href="lib.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
 </head>
-<body>
-<input type="text" id="searchInput" placeholder="输入关键词搜索图片">
-<button onclick="searchImages()">搜索</button>
+<body align="center">
+<h4 align="center">ComfyUI图片收纳架</h4>
+<blockquote align="center">
+    <p><em>配置文件中设置comfy.job=false,会开启自动跑图的ComfyUI任务</em></p>
+</blockquote>
+<div class="columns col-gapless">
+    <div class="column col-3"></div>
+    <div class="column col-6">
+        <input class="form-input" type="text" id="searchInput" placeholder="输入关键词搜索图片">
+    </div>
+    <div class="column col-1" align="left">
+        <button class="btn btn-primary" onclick="searchImages()">搜索</button>
+    </div>
+</div>
+
 <div id="imageGallery" class="image-gallery"></div>
 
 <script src="lib.js"></script>

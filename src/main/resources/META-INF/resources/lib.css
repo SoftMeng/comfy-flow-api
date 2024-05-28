@@ -1,7 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0px;
+    padding: 30px;
+    align: center;
 }
 
 .image-gallery {
@@ -15,4 +16,5 @@ body {
     width: 100%;
     height: auto;
     margin-bottom: 0.1em; /* 图片之间的间距 */
+    will-change: opacity, transform;
 }
