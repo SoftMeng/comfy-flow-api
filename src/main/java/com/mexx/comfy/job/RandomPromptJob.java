@@ -5,10 +5,8 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.mexx.comfy.entity.ComfyPromptTask;
 import com.mexx.comfy.exception.BadException;
 import com.mexx.comfy.model.ComfyImageVo;
-import com.mexx.comfy.model.ComfyPromptResp;
 import com.mexx.comfy.model.FlowVo;
 import com.mexx.comfy.model.PushVo;
 import com.mexx.comfy.model.Result;
@@ -16,12 +14,9 @@ import com.mexx.comfy.properties.ComfyProperties;
 import com.mexx.comfy.resource.ComfyResource;
 import com.mexx.comfy.utils.ClientUtils;
 import io.quarkus.scheduler.Scheduled;
-import io.smallrye.mutiny.Uni;
-import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -40,12 +35,12 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class RandomPromptJob {
     private static final Logger LOGGER = LoggerFactory.getLogger(RandomPromptJob.class);
+    private static final AtomicInteger atomicInteger = new AtomicInteger(0);
+    private static boolean running = false;
     @Inject
     private ComfyResource comfyResource;
     @Inject
     private ComfyProperties comfyProperties;
-    private static AtomicInteger atomicInteger = new AtomicInteger(0);
-    private static boolean running = false;
 
     @Scheduled(every = "5s")
     public void runRandomPrompt() {

@@ -10,7 +10,6 @@ import com.mexx.comfy.model.Result;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
-import io.vertx.core.json.JsonObject;
 import jakarta.annotation.security.PermitAll;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
@@ -40,7 +39,7 @@ public class ImageResource {
             keyword = "";
         }
         PanacheQuery<ComfyPromptTask> panacheQuery = ComfyPromptTask.find(
-            "prompt like ?1", Sort.descending("id"),"%" + keyword + "%");
+            "prompt like ?1", Sort.descending("id"), "%" + keyword + "%");
         List<ComfyPromptTask> comfyPromptTasks = panacheQuery.page(Page.of(0, 65)).list();
         List<ImageVo> images = Lists.newArrayList();
         comfyPromptTasks.forEach(comfyPromptTask -> {
