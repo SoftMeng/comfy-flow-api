@@ -29,6 +29,10 @@ public class PushVo {
     @SchemaProperty(name = "参数")
     @PartType(MediaType.TEXT_PLAIN)
     private String prompt;
+    @FormParam
+    @SchemaProperty(name = "参数")
+    @PartType(MediaType.TEXT_PLAIN)
+    private String negativePrompt;
     @FormParam("file")
     @SchemaProperty(name = "图片文件")
     @PartType(MediaType.APPLICATION_OCTET_STREAM)

@@ -5,8 +5,6 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.Response;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 /**
  * Description:  .<br>
@@ -21,8 +19,7 @@ public class ClientUtils {
      * @return .
      */
     public static Client buildClient() {
-        ClientBuilder clientBuilder = ResteasyClientBuilder.newBuilder()
-            .connectTimeout(10000, TimeUnit.SECONDS);
+        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         return clientBuilder.build();
     }
 

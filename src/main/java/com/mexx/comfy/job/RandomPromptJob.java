@@ -62,25 +62,25 @@ public class RandomPromptJob {
             ClientUtils.check200(response);
             JSONObject resp = JSONUtil.parseObj(str);
             JSONArray jsonArray = resp.getJSONArray("data");
-            jsonArray.forEach(o -> {
-                if (o instanceof JSONObject object) {
-                    int no = atomicInteger.getAndAdd(1);
-                    StopWatch stopWatch = new StopWatch();
-                    stopWatch.start();
-                    String prompt = object.getStr("prompt");
-                    PushVo pushVo = new PushVo();
-                    pushVo.setFlowName(RandomUtil.randomEle(flowVos).getName());
-                    pushVo.setPrompt(prompt);
-                    LOGGER.info("[No.{}] - Prompt: {}", no, pushVo.getPrompt());
-                    LOGGER.info("[No.{}] - 工作流: {}", no, pushVo.getFlowName());
-                    Result<List<ComfyImageVo>> listResult = comfyResource.allin(pushVo);
-                    stopWatch.stop();
-                    listResult.getResult().forEach(comfyImageVo -> {
-                        LOGGER.info("[No.{}] - View Url: {}", no, comfyImageVo.getViewUrl());
-                    });
-                    LOGGER.info("[No.{}] - 耗时: {}", no, stopWatch.getTotalTimeSeconds());
-                }
+            if (Objects.isNull(jsonArray) || jsonArray.isEmpty()) {
+                return;
+            }
+            JSONObject object = jsonArray.getJSONObject(0);
+            int no = atomicInteger.getAndAdd(1);
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            String prompt = object.getStr("prompt");
+            PushVo pushVo = new PushVo();
+            pushVo.setFlowName(RandomUtil.randomEle(flowVos).getName());
+            pushVo.setPrompt(prompt);
+            LOGGER.info("[No.{}] - Prompt: {}", no, pushVo.getPrompt());
+            LOGGER.info("[No.{}] - 工作流: {}", no, pushVo.getFlowName());
+            Result<List<ComfyImageVo>> listResult = comfyResource.allin(pushVo);
+            stopWatch.stop();
+            listResult.getResult().forEach(comfyImageVo -> {
+                LOGGER.info("[No.{}] - View Url: {}", no, comfyImageVo.getViewUrl());
             });
+            LOGGER.info("[No.{}] - 耗时: {}", no, stopWatch.getTotalTimeSeconds());
         } catch (Exception e) {
             LOGGER.error("Random AI Prompt", e);
             throw new BadException("Random AI Prompt:" + e.getMessage());

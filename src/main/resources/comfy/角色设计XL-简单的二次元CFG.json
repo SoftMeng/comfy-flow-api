@@ -1,0 +1,207 @@
+{
+  "3": {
+    "inputs": {
+      "seed": ___seed___,
+      "steps": 15,
+      "cfg": 4,
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": [
+        "95",
+        0
+      ],
+      "positive": [
+        "76",
+        0
+      ],
+      "negative": [
+        "77",
+        0
+      ],
+      "latent_image": [
+        "44",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "K采样器"
+    }
+  },
+  "8": {
+    "inputs": {
+      "samples": [
+        "3",
+        0
+      ],
+      "vae": [
+        "58",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE解码"
+    }
+  },
+  "44": {
+    "inputs": {
+      "width": [
+        "67",
+        2
+      ],
+      "height": [
+        "68",
+        2
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "空Latent"
+    }
+  },
+  "58": {
+    "inputs": {
+      "ckpt_name": "Mexx/CharacterArtXLV7.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Checkpoint加载器(简易)"
+    }
+  },
+  "62": {
+    "inputs": {
+      "text": "Perfect award-winning Character Design,___prompt___"
+    },
+    "class_type": "Text Multiline",
+    "_meta": {
+      "title": "多行文本"
+    }
+  },
+  "63": {
+    "inputs": {
+      "text": "nsfw,disfigured,ugly,deformed,text,logo,word,watermark,bad crop,out of frame,fat,obese,thick thighs,border,crop,"
+    },
+    "class_type": "Text Multiline",
+    "_meta": {
+      "title": "多行文本"
+    }
+  },
+  "67": {
+    "inputs": {
+      "number_type": "integer",
+      "number": 512
+    },
+    "class_type": "Constant Number",
+    "_meta": {
+      "title": "常数"
+    }
+  },
+  "68": {
+    "inputs": {
+      "number_type": "integer",
+      "number": 1024
+    },
+    "class_type": "Constant Number",
+    "_meta": {
+      "title": "常数"
+    }
+  },
+  "76": {
+    "inputs": {
+      "text": [
+        "62",
+        0
+      ],
+      "strength": 0.8,
+      "add_weight": 0,
+      "clip": [
+        "58",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeWithWeight //Inspire",
+    "_meta": {
+      "title": "CLIP文本编码(权重)"
+    }
+  },
+  "77": {
+    "inputs": {
+      "text": [
+        "63",
+        0
+      ],
+      "strength": 0.9,
+      "add_weight": 0,
+      "clip": [
+        "58",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeWithWeight //Inspire",
+    "_meta": {
+      "title": "CLIP文本编码(权重)"
+    }
+  },
+  "80": {
+    "inputs": {
+      "hdr_intensity": 0.4,
+      "shadow_intensity": 0.25,
+      "highlight_intensity": 0.75,
+      "gamma_intensity": 0.25,
+      "contrast": 0.1,
+      "enhance_color": 0.25,
+      "image": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "LayerFilter: HDREffects",
+    "_meta": {
+      "title": "HDR特效"
+    }
+  },
+  "92": {
+    "inputs": {
+      "output_path": "[time(%Y-%m-%d)]",
+      "filename_prefix": "Mexx",
+      "filename_delimiter": "_",
+      "filename_number_padding": 4,
+      "filename_number_start": "false",
+      "extension": "jpg",
+      "dpi": 72,
+      "quality": 95,
+      "optimize_image": "true",
+      "lossless_webp": "false",
+      "overwrite_mode": "false",
+      "show_history": "false",
+      "show_history_by_prefix": "true",
+      "embed_workflow": "true",
+      "show_previews": "true",
+      "images": [
+        "80",
+        0
+      ]
+    },
+    "class_type": "Image Save",
+    "_meta": {
+      "title": "图像保存"
+    }
+  },
+  "95": {
+    "inputs": {
+      "hard_mode": true,
+      "boost": true,
+      "model": [
+        "58",
+        0
+      ]
+    },
+    "class_type": "Automatic CFG",
+    "_meta": {
+      "title": "自动CFG"
+    }
+  }
+}

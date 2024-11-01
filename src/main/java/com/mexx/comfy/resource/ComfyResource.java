@@ -6,6 +6,8 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.Lists;
@@ -39,6 +41,9 @@ import jakarta.ws.rs.core.GenericEntity;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -92,7 +97,7 @@ public class ComfyResource {
         final String comfyIp = comfyPromptTask.comfyIp;
         List<ComfyImageVo> comfyImageVos = JSONUtil.toList(comfyPromptTask.result, ComfyImageVo.class);
         for (int i = 0; i <= 80; i++) {
-            ThreadUtil.sleep(1500);
+            ThreadUtil.sleep(2000);
             if (CollUtil.isEmpty(comfyImageVos)) {
                 comfyImageVos = getComfyViews(comfyIp, promptId);
                 if (CollUtil.isNotEmpty(comfyImageVos)) {
@@ -119,10 +124,16 @@ public class ComfyResource {
         List<FlowVo> flowVos = getFlowVos();
         String json = getFlow(pushVo.getFlowName(), flowVos);
         final String comfyIp = getComfyIp();
-        final long send = RandomUtil.randomLong(1L, 8_446_744_073_709_551_614L);
+        final long send = RandomUtil.randomLong(1L, 9_744_073_709_551_614L);
         final String image = uploadComfyFile(comfyIp, pushVo.getFile());
-        json = StrUtil.replace(json, "___seed___", String.valueOf(send));
+        final String localDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        final String localTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
         json = StrUtil.replace(json, "___prompt___", pushVo.getPrompt());
+        json = StrUtil.replace(json, "___negative_prompt___", pushVo.getNegativePrompt());
+        json = StrUtil.replace(json, "___seed___", String.valueOf(send));
+        json = StrUtil.replace(json, "___localDate___", localDate);
+        json = StrUtil.replace(json, "___localTime___", localTime);
+        json = StrUtil.replace(json, "___key___", localTime);
         if (Objects.nonNull(image)) {
             json = StrUtil.replace(json, "___image___", image);
         }
@@ -134,7 +145,7 @@ public class ComfyResource {
                 }
                 """, pushVo.getOpenid(), json
         );
-        LOGGER.debug("ComfyUI-提交任务-请求:{}", postJson);
+        LOGGER.info("ComfyUI-提交任务-请求:{}", postJson);
         Response response = null;
         try (Client client = ClientUtils.buildClient()) {
             Invocation.Builder builder = client.target("http://" + comfyIp + ":8188/prompt")
@@ -212,24 +223,28 @@ public class ComfyResource {
             Invocation.Builder builder = client.target("http://" + comfyIp + ":8188/history/" + prompt_id)
                 .request(MediaType.APPLICATION_JSON);
             response = builder.get();
-            JsonObject resp = response.readEntity(JsonObject.class);
-            LOGGER.info("ComfyUI-查询进度-返回:{},{}", response.getStatus(), resp.toString());
+            String respStr = response.readEntity(String.class);
+            LOGGER.info("ComfyUI-查询进度-返回:{},{}", response.getStatus(), respStr);
             ClientUtils.check200(response);
+            JSONObject resp = JSONUtil.parseObj(respStr);
             if (resp.isEmpty()) {
                 return Lists.newArrayList();
             }
-            JsonObject body = resp.getJsonObject(prompt_id);
-            JsonObject outputs = body.getJsonObject("outputs");
-            outputs.stream().forEach(entry -> {
-                Object value = entry.getValue();
-                if (value instanceof JsonObject imageBody) {
+            JSONObject body = resp.getJSONObject(prompt_id);
+            if (Objects.isNull(body) || body.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            JSONObject outputs = body.getJSONObject("outputs");
+            outputs.forEach(o -> {
+                if (o.getValue() instanceof JSONObject imageBody) {
                     if (imageBody.containsKey("images")) {
-                        imageBody.getJsonArray("images").stream()
+                        imageBody.getJSONArray("images")
+                            .stream()
                             .forEach(image -> {
-                                if (image instanceof JsonObject imageJson) {
-                                    final String subfolder = imageJson.getString("subfolder");
-                                    final String filename = imageJson.getString("filename");
-                                    final String type = imageJson.getString("type");
+                                if (image instanceof JSONObject imageJson) {
+                                    final String subfolder = imageJson.getStr("subfolder");
+                                    final String filename = imageJson.getStr("filename");
+                                    final String type = imageJson.getStr("type");
                                     final String imageUrl = getImageUrl(comfyIp, subfolder, filename, type);
                                     final String viewUrl = fileStorage.upload(imageUrl, filename);
                                     ComfyImageVo comfyImageVo = new ComfyImageVo();
