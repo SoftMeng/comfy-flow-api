@@ -22,7 +22,6 @@ import com.mexx.comfy.properties.ComfyProperties;
 import com.mexx.comfy.service.FileStorage;
 import com.mexx.comfy.utils.ClientUtils;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.vertx.core.json.JsonObject;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
